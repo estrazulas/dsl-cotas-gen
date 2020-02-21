@@ -1,0 +1,60 @@
+{
+  "lei":{
+    "geral":{
+      "codigo":"IFSC_12711_004",
+      "descricao":"LEI TESTES JSON",
+      "arredondamento":"round"
+    },
+
+    "configuracoes":{
+      "PercentualEP":"50.0"
+    },
+
+    "distribuicao":{
+      "categoria":
+      
+        {
+        "sigla":"TOTALVAGAS",
+
+          "categorias":[
+
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Amplaas"
+            },
+            {
+            "sigla":"EP",
+
+            "reserva":"PercentualEP",
+              "categorias":[
+
+                {
+                "sigla":"RI",
+
+                "reserva":"50",
+                "descricao":"Renda Inferior"
+                },
+                {
+                "sigla":"RS",
+
+                "reserva":"RESTANTE_VAGAS",
+                "descricao":"Renda Superior"
+                }
+              ]
+            ,            "descricao":"Escola publica"
+            }
+          ]
+        ,        "descricao":"Total de Vagas"
+        }
+    },
+
+    "ordemprioridade":{
+      "0":"RI",
+      "1":"RS",
+      "2":"CLAG"
+    }
+
+  }
+}

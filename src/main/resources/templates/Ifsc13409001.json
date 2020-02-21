@@ -1,0 +1,108 @@
+{
+  "lei":{
+    "geral":{
+      "codigo":"IFSC_13409_001",
+      "descricao":"002 Lei 13.409 versão IFSC",
+      "arredondamento":"ceil"
+    },
+
+    "configuracoes":{
+      "PercentualEP":"50.0",
+      "PercentualPCD":"7.69",
+      "PercentualPPI":"15.7"
+    },
+
+    "distribuicao":{
+      "categoria":
+      
+        {
+        "sigla":"TOTAL",
+
+          "categorias":[
+
+            {
+            "sigla":"EP",
+
+            "reserva":"PercentualEP",
+              "categorias":[
+
+                {
+                "sigla":"EP_RI",
+
+                "reserva":"50",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RI_PPI",
+
+                    "reserva":"PercentualPPI",
+                    "descricao":"Candidatos com renda inferior auto declarados preto pardo ou indigenas "
+                    },
+                    {
+                    "sigla":"EP_RI_PCD",
+
+                    "reserva":"PercentualPCD",
+                    "descricao":"Candidatos com renda inferior inscrito na categoria PCD"
+                    },
+                    {
+                    "sigla":"EP_RI_NPCD_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                    "descricao":"Demais vagas RI, candidatos não declarados PCD ou PPI"
+                    }
+                  ]
+                ,                "descricao":"Escola pública com renda inferior ou igual à 1.5 salários mínimos"
+                },
+                {
+                "sigla":"EP_RS",
+
+                "reserva":"RESTANTE_VAGAS",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RS_PPI",
+
+                    "reserva":"PercentualPPI",
+                    "descricao":"Candidatos com renda superior auto declarados preto pardo ou indigenas "
+                    },
+                    {
+                    "sigla":"EP_RS_PCD",
+
+                    "reserva":"PercentualPCD",
+                    "descricao":"Candidatos com renda superior inscrito na categoria PCD"
+                    },
+                    {
+                    "sigla":"EP_RS_NPCD_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                    "descricao":"Demais vagas RS, candidatos não declarados PCD ou PPI"
+                    }
+                  ]
+                ,                "descricao":"Escola pública com renda superior ou igual à 1.5 salários mínimos"
+                }
+              ]
+            ,            "descricao":"Escola pública"
+            },
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Ampla concorrência"
+            }
+          ]
+        ,        "descricao":"Total de vagas"
+        }
+    },
+
+    "ordemprioridade":{
+      "0":"EP_RI_PCD",
+      "1":"EP_RI_PPI",
+      "2":"EP_RI_NPCD_NPPI",
+      "3":"EP_RS_PCD",
+      "4":"EP_RS_PPI",
+      "5":"EP_RS_NPCD_NPPI",
+      "6":"CLAG"
+    }
+
+  }
+}

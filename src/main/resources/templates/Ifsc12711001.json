@@ -1,0 +1,93 @@
+{
+  "lei":{
+    "geral":{
+      "codigo":"IFSC_12711_001",
+      "descricao":"001 Lei 12.711 primeira versão",
+      "arredondamento":"round"
+    },
+
+    "configuracoes":{
+      "PercentualEP":"50.0",
+      "PercentualPPI":"37.0"
+    },
+
+    "distribuicao":{
+      "categoria":
+      
+        {
+        "sigla":"TOTALVAGAS",
+
+          "categorias":[
+
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Ampla Concorrencia"
+            },
+            {
+            "sigla":"EP",
+
+            "reserva":"PercentualEP",
+              "categorias":[
+
+                {
+                "sigla":"EP_RI",
+
+                "reserva":"50.0",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RI_PPI",
+
+                    "reserva":"PercentualPPI",
+                    "descricao":"Candidatos de renda inferior que são auto declarados preto pardo indígenas"
+                    },
+                    {
+                    "sigla":"EP_RI_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                    "descricao":"Candidatos de renda inferior que NÃO são auto declarados preto pardo indígenas"
+                    }
+                  ]
+                ,                "descricao":"Escola pública com renda inferior ou igual à 1.5 salários mínimos"
+                },
+                {
+                "sigla":"EP_RS",
+
+                "reserva":"RESTANTE_VAGAS",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RS_PPI",
+
+                    "reserva":"PercentualPPI",
+                    "descricao":"Candidatos de renda superior que são auto declarados preto pardo indígenas"
+                    },
+                    {
+                    "sigla":"EP_RS_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                    "descricao":"Candidatos de renda superior a 1.5 salarios minimos, que NÃO são auto declarados preto pardo indígenas"
+                    }
+                  ]
+                ,                "descricao":"Escola pública com renda superior ou igual à 1.5 salários mínimos"
+                }
+              ]
+            ,            "descricao":"Candidatos que estudaram em escola púlica"
+            }
+          ]
+        ,        "descricao":"Total de vagas"
+        }
+    },
+
+    "ordemprioridade":{
+      "0":"EP_RI_PPI",
+      "1":"EP_RI_NPPI",
+      "2":"EP_RS_PPI",
+      "3":"EP_RS_NPPI",
+      "4":"CLAG"
+    }
+
+  }
+}

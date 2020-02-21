@@ -1,0 +1,158 @@
+{
+  "lei":{
+    "geral":{
+      "codigo":"IFSC_13409_002",
+      "descricao":"003 Lei 13.409 portaria nr 18/2012/MEC (atual)",
+      "arredondamento":"round"
+    },
+
+    "configuracoes":{
+      "PercentualEP":"50.0",
+      "PercentualPPI":"15.7",
+      "PercentualPCD":"7.69"
+    },
+
+    "distribuicao":{
+      "categoria":
+      
+        {
+        "sigla":"TOTALVAGAS",
+
+          "categorias":[
+
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Ampla concorrência "
+            },
+            {
+            "sigla":"EP",
+
+            "reserva":"50",
+              "categorias":[
+
+                {
+                "sigla":"EP_RI",
+
+                "reserva":"50",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RI_PPI",
+
+                    "reserva":"PercentualPPI",
+                      "categorias":[
+
+                        {
+                        "sigla":"EP_RI_PPI_PCD",
+
+                        "reserva":"PercentualPCD",
+                        "descricao":"Candidatos inscritos como RI auto declarados PPI e que possuem deficência"
+                        },
+                        {
+                        "sigla":"EP_RI_PPI_NPCD",
+
+                        "reserva":"RESTANTE_VAGAS",
+                        "descricao":"Candidatos inscritos como RI auto declarados PPI e que NÃO possuem deficência"
+                        }
+                      ]
+                    ,                    "descricao":"Candidatos de RI auto declarados PPI"
+                    },
+                    {
+                    "sigla":"EP_RI_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                      "categorias":[
+
+                        {
+                        "sigla":"EP_RI_NPPI_PCD",
+
+                        "reserva":"PercentualPCD",
+                        "descricao":"Candidatos inscritos como RI auto declarados PPI e que possuem deficência"
+                        },
+                        {
+                        "sigla":"EP_RI_NPPI_NPCD",
+
+                        "reserva":"RESTANTE_VAGAS",
+                        "descricao":"Candidatos inscritos como RI auto declarados PPI e que NÃO possuem deficência"
+                        }
+                      ]
+                    ,                    "descricao":"Demais candidatos não auto declarados PPI"
+                    }
+                  ]
+                ,                "descricao":"Candidatos de renda inferior ou igual a 1.5 salarios minimos"
+                },
+                {
+                "sigla":"EP_RS",
+
+                "reserva":"RESTANTE_VAGAS",
+                  "categorias":[
+
+                    {
+                    "sigla":"EP_RS_PPI",
+
+                    "reserva":"PercentualPPI",
+                      "categorias":[
+
+                        {
+                        "sigla":"EP_RS_PPI_PCD",
+
+                        "reserva":"PercentualPCD",
+                        "descricao":"Candidatos inscritos como RS auto declarados PPI e que possuem deficência"
+                        },
+                        {
+                        "sigla":"EP_RS_PPI_NPCD",
+
+                        "reserva":"RESTANTE_VAGAS",
+                        "descricao":"Candidatos inscritos como RS auto declarados PPI e que NÃO possuem deficência"
+                        }
+                      ]
+                    ,                    "descricao":"Candidatos de RS auto declarados PPI"
+                    },
+                    {
+                    "sigla":"EP_RS_NPPI",
+
+                    "reserva":"RESTANTE_VAGAS",
+                      "categorias":[
+
+                        {
+                        "sigla":"EP_RS_NPPI_PCD",
+
+                        "reserva":"PercentualPCD",
+                        "descricao":"Candidatos inscritos como RS auto declarados PPI e que possuem deficência"
+                        },
+                        {
+                        "sigla":"EP_RS_NPPI_NPCD",
+
+                        "reserva":"RESTANTE_VAGAS",
+                        "descricao":"Candidatos inscritos como RS auto declarados PPI e que NÃO possuem deficência"
+                        }
+                      ]
+                    ,                    "descricao":"Demais candidatos não auto declarados PPI"
+                    }
+                  ]
+                ,                "descricao":"Candidatos de renda superior ou igual a 1.5 salarios minimos"
+                }
+              ]
+            ,            "descricao":"Candidatos estudantes da escola ública"
+            }
+          ]
+        ,        "descricao":"Total de vagas disponíveis"
+        }
+    },
+
+    "ordemprioridade":{
+      "0":"EP_RI_PPI_PCD",
+      "1":"EP_RI_NPPI_PCD",
+      "2":"EP_RS_PPI_PCD",
+      "3":"EP_RS_NPPI_PCD",
+      "4":"EP_RI_PPI_NPCD",
+      "5":"EP_RI_NPPI_NPCD",
+      "6":"EP_RS_PPI_NPCD",
+      "7":"EP_RS_NPPI_NPCD",
+      "8":"CLAG"
+    }
+
+  }
+}
