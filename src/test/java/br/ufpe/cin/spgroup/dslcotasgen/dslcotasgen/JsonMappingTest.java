@@ -156,68 +156,162 @@ class JsonMappingTest {
 		objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
 		
 		String json="{\n" + 
-				"   \"lei\":{\n" + 
-				"      \"geral\":{\n" + 
-				"         \"codigo\":\"IFSC_13409_002\",\n" + 
-				"         \"descricao\":\"003 Lei 13.409 portaria nr 18/2012/MEC (atual)\",\n" + 
-				"         \"arredondamento\":\"ceil\"\n" + 
+				"  \"lei\":{\n" + 
+				"    \"geral\":{\n" + 
+				"      \"codigo\":\"IFSC_13409_002\",\n" + 
+				"      \"descricao\":\"003 Lei 13.409 portaria nr 18/2012/MEC (atual)\",\n" + 
+				"      \"arredondamento\":\"round\"\n" + 
+				"    },\n" + 
+				"\n" + 
+				"    \"configuracoes\":{\n" + 
+				"      \"PercentualEP\":\"50.0\",\n" + 
+				"      \"PercentualPPI\":\"15.7\",\n" + 
+				"      \"PercentualPCD\":\"7.69\"\n" + 
+				"    },\n" + 
+				"\n" + 
+				"    \"distribuicao\":{\n" + 
+				"      \"categoria\":\n" + 
 				"      \n" + 
-				"},\n" + 
-				"      \"configuracoes\":null,\n" + 
-				"      \"distribuicao\":{\n" + 
-				"         \"categoria\":{\n" + 
-				"            \"sigla\":\"TOTALVAGAS\",\n" + 
-				"            \"reserva\":\"\",\n" + 
-				"            \"descricao\":\"Total de vagas\",\n" + 
-				"            \"categorias\":[\n" + 
-				"               {\n" + 
-				"                  \"sigla\":\"CLAG\",\n" + 
-				"                  \"reserva\":\"CLAG\",\n" + 
-				"                  \"descricao\":\"Ampla concorrência\",\n" + 
+				"        {\n" + 
+				"        \"sigla\":\"TOTALVAGAS\",\n" + 
+				"\n" + 
+				"          \"categorias\":[\n" + 
+				"\n" + 
+				"            {\n" + 
+				"            \"sigla\":\"CLAG\",\n" + 
+				"\n" + 
+				"            \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"            \"descricao\":\"Ampla concorrência \"\n" + 
+				"            },\n" + 
+				"            {\n" + 
+				"            \"sigla\":\"EP\",\n" + 
+				"\n" + 
+				"            \"reserva\":\"50\",\n" + 
+				"              \"categorias\":[\n" + 
+				"\n" + 
+				"                {\n" + 
+				"                \"sigla\":\"EP_RI\",\n" + 
+				"\n" + 
+				"                \"reserva\":\"50\",\n" + 
 				"                  \"categorias\":[\n" + 
 				"\n" + 
-				"                  \n" + 
-				"]\n" + 
-				"               \n" + 
-				"},\n" + 
-				"               {\n" + 
-				"                  \"sigla\":\"EP\",\n" + 
-				"                  \"reserva\":\"EP\",\n" + 
-				"                  \"descricao\":\"Escola pública\",\n" + 
+				"                    {\n" + 
+				"                    \"sigla\":\"EP_RI_PPI\",\n" + 
+				"\n" + 
+				"                    \"reserva\":\"PercentualPPI\",\n" + 
+				"                      \"categorias\":[\n" + 
+				"\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RI_PPI_PCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"PercentualPCD\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RI auto declarados PPI e que possuem deficência\"\n" + 
+				"                        },\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RI_PPI_NPCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RI auto declarados PPI e que NÃO possuem deficência\"\n" + 
+				"                        }\n" + 
+				"                      ]\n" + 
+				"                    ,                    \"descricao\":\"Candidatos de RI auto declarados PPI\"\n" + 
+				"                    },\n" + 
+				"                    {\n" + 
+				"                    \"sigla\":\"EP_RI_NPPI\",\n" + 
+				"\n" + 
+				"                    \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                      \"categorias\":[\n" + 
+				"\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RI_NPPI_PCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"PercentualPCD\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RI auto declarados PPI e que possuem deficência\"\n" + 
+				"                        },\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RI_NPPI_NPCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RI auto declarados PPI e que NÃO possuem deficência\"\n" + 
+				"                        }\n" + 
+				"                      ]\n" + 
+				"                    ,                    \"descricao\":\"Demais candidatos não auto declarados PPI\"\n" + 
+				"                    }\n" + 
+				"                  ]\n" + 
+				"                ,                \"descricao\":\"Candidatos de renda inferior ou igual a 1.5 salarios minimos\"\n" + 
+				"                },\n" + 
+				"                {\n" + 
+				"                \"sigla\":\"EP_RS\",\n" + 
+				"\n" + 
+				"                \"reserva\":\"RESTANTE_VAGAS\",\n" + 
 				"                  \"categorias\":[\n" + 
-				"                     {\n" + 
-				"                        \"sigla\":\"RI\",\n" + 
-				"                        \"reserva\":\"RI\",\n" + 
-				"                        \"descricao\":\"RI\",\n" + 
-				"                        \"categorias\":[\n" + 
 				"\n" + 
-				"                        \n" + 
-				"]\n" + 
-				"                     \n" + 
-				"},\n" + 
-				"                     {\n" + 
-				"                        \"sigla\":\"RS\",\n" + 
-				"                        \"reserva\":\"RS\",\n" + 
-				"                        \"descricao\":\"RS\",\n" + 
-				"                        \"categorias\":[\n" + 
+				"                    {\n" + 
+				"                    \"sigla\":\"EP_RS_PPI\",\n" + 
 				"\n" + 
-				"                        \n" + 
-				"]\n" + 
-				"                     \n" + 
-				"}\n" + 
-				"                  \n" + 
-				"]\n" + 
-				"               \n" + 
-				"}\n" + 
-				"            \n" + 
-				"]\n" + 
-				"         \n" + 
-				"}\n" + 
-				"      \n" + 
-				"},\n" + 
-				"      \"ordemprioridade\":null\n" + 
-				"   \n" + 
-				"}\n" + 
+				"                    \"reserva\":\"PercentualPPI\",\n" + 
+				"                      \"categorias\":[\n" + 
+				"\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RS_PPI_PCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"PercentualPCD\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RS auto declarados PPI e que possuem deficência\"\n" + 
+				"                        },\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RS_PPI_NPCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RS auto declarados PPI e que NÃO possuem deficência\"\n" + 
+				"                        }\n" + 
+				"                      ]\n" + 
+				"                    ,                    \"descricao\":\"Candidatos de RS auto declarados PPI\"\n" + 
+				"                    },\n" + 
+				"                    {\n" + 
+				"                    \"sigla\":\"EP_RS_NPPI\",\n" + 
+				"\n" + 
+				"                    \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                      \"categorias\":[\n" + 
+				"\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RS_NPPI_PCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"PercentualPCD\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RS auto declarados PPI e que possuem deficência\"\n" + 
+				"                        },\n" + 
+				"                        {\n" + 
+				"                        \"sigla\":\"EP_RS_NPPI_NPCD\",\n" + 
+				"\n" + 
+				"                        \"reserva\":\"RESTANTE_VAGAS\",\n" + 
+				"                        \"descricao\":\"Candidatos inscritos como RS auto declarados PPI e que NÃO possuem deficência\"\n" + 
+				"                        }\n" + 
+				"                      ]\n" + 
+				"                    ,                    \"descricao\":\"Demais candidatos não auto declarados PPI\"\n" + 
+				"                    }\n" + 
+				"                  ]\n" + 
+				"                ,                \"descricao\":\"Candidatos de renda superior ou igual a 1.5 salarios minimos\"\n" + 
+				"                }\n" + 
+				"              ]\n" + 
+				"            ,            \"descricao\":\"Candidatos estudantes da escola ública\"\n" + 
+				"            }\n" + 
+				"          ]\n" + 
+				"        ,        \"descricao\":\"Total de vagas dispoível\"\n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"\n" + 
+				"    \"ordemprioridade\":{\n" + 
+				"      \"0\":\"EP_RI_PPI_PCD\",\n" + 
+				"      \"1\":\"EP_RI_NPPI_PCD\",\n" + 
+				"      \"2\":\"EP_RS_PPI_PCD\",\n" + 
+				"      \"3\":\"EP_RS_NPPI_PCD\",\n" + 
+				"      \"4\":\"EP_RI_PPI_NPCD\",\n" + 
+				"      \"5\":\"EP_RI_NPPI_NPCD\",\n" + 
+				"      \"6\":\"EP_RS_PPI_NPCD\",\n" + 
+				"      \"7\":\"EP_RS_NPPI_NPCD\",\n" + 
+				"      \"8\":\"CLAG\"\n" + 
+				"    }\n" + 
+				"\n" + 
+				"  }\n" + 
 				"}";
 		
 		LeiDeCota lei = objectMapper.readValue(json, LeiDeCota.class);
