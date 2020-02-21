@@ -4,7 +4,10 @@ public class Distribuicao {
 
 	private CategoriaCota categoria;
 
-	
+	public Distribuicao()
+	{
+		
+	}
 	public Distribuicao(CategoriaCota categoria) {
 		this.categoria = categoria;
 	}

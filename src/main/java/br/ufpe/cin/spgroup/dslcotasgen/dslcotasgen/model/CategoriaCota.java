@@ -13,6 +13,7 @@ public class CategoriaCota {
 	
 	private List<CategoriaCota> categorias = new ArrayList<>();
 	
+	public CategoriaCota() {};
 	public CategoriaCota(String sigla, String reserva, String descricao) {
 		super();
 		this.sigla = sigla;

@@ -19,7 +19,6 @@ import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.DadosGerais;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Distribuicao;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.LeiDeCota;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.OrdemPrioridade;
-import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.jsonutil.DistribuicaoSerializer;
 class JsonMappingTest {
 
 
@@ -126,17 +125,103 @@ class JsonMappingTest {
 	    
 	    objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
 	    SimpleModule module = new SimpleModule();
-	    module.addSerializer(Distribuicao.class, new DistribuicaoSerializer());
+	    //module.addSerializer(Distribuicao.class, new DistribuicaoSerializer());
 	    objectMapper.registerModule(module);
 	    
 		CategoriaCota pai = new CategoriaCota("TOTALVAGAS", "", "Total de vagas");
 		CategoriaCota clag = new CategoriaCota("CLAG", "CLAG", "Ampla concorrência");
 		CategoriaCota ep = new CategoriaCota("EP", "EP", "Escola pública");
+		CategoriaCota ri = new CategoriaCota("RI", "RI", "RI");
+		CategoriaCota rs = new CategoriaCota("RS", "RS", "RS");
+		ep.addCategoriaDistribuicao(ri);
+		ep.addCategoriaDistribuicao(rs);
 		pai.addCategoriaDistribuicao(clag);
 		pai.addCategoriaDistribuicao(ep);
 		Distribuicao dis = new Distribuicao(pai);
 		
 		LeiDeCota lei = new LeiDeCota(new DadosGerais("IFSC_13409_002","003 Lei 13.409 portaria nr 18/2012/MEC (atual)",Arredondamento.CEIL),dis);
+		String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(lei);
+		System.out.println(jsonString);
+		
+		
+	}
+	
+	@Test
+	void testaDesSerializarCategoria() throws JsonProcessingException {
+	    ObjectMapper objectMapper = new ObjectMapper();
+	    
+	    SimpleModule module = new SimpleModule();
+	    objectMapper.registerModule(module);
+	    
+		objectMapper.enable(DeserializationFeature.UNWRAP_ROOT_VALUE);
+		
+		String json="{\n" + 
+				"   \"lei\":{\n" + 
+				"      \"geral\":{\n" + 
+				"         \"codigo\":\"IFSC_13409_002\",\n" + 
+				"         \"descricao\":\"003 Lei 13.409 portaria nr 18/2012/MEC (atual)\",\n" + 
+				"         \"arredondamento\":\"ceil\"\n" + 
+				"      \n" + 
+				"},\n" + 
+				"      \"configuracoes\":null,\n" + 
+				"      \"distribuicao\":{\n" + 
+				"         \"categoria\":{\n" + 
+				"            \"sigla\":\"TOTALVAGAS\",\n" + 
+				"            \"reserva\":\"\",\n" + 
+				"            \"descricao\":\"Total de vagas\",\n" + 
+				"            \"categorias\":[\n" + 
+				"               {\n" + 
+				"                  \"sigla\":\"CLAG\",\n" + 
+				"                  \"reserva\":\"CLAG\",\n" + 
+				"                  \"descricao\":\"Ampla concorrência\",\n" + 
+				"                  \"categorias\":[\n" + 
+				"\n" + 
+				"                  \n" + 
+				"]\n" + 
+				"               \n" + 
+				"},\n" + 
+				"               {\n" + 
+				"                  \"sigla\":\"EP\",\n" + 
+				"                  \"reserva\":\"EP\",\n" + 
+				"                  \"descricao\":\"Escola pública\",\n" + 
+				"                  \"categorias\":[\n" + 
+				"                     {\n" + 
+				"                        \"sigla\":\"RI\",\n" + 
+				"                        \"reserva\":\"RI\",\n" + 
+				"                        \"descricao\":\"RI\",\n" + 
+				"                        \"categorias\":[\n" + 
+				"\n" + 
+				"                        \n" + 
+				"]\n" + 
+				"                     \n" + 
+				"},\n" + 
+				"                     {\n" + 
+				"                        \"sigla\":\"RS\",\n" + 
+				"                        \"reserva\":\"RS\",\n" + 
+				"                        \"descricao\":\"RS\",\n" + 
+				"                        \"categorias\":[\n" + 
+				"\n" + 
+				"                        \n" + 
+				"]\n" + 
+				"                     \n" + 
+				"}\n" + 
+				"                  \n" + 
+				"]\n" + 
+				"               \n" + 
+				"}\n" + 
+				"            \n" + 
+				"]\n" + 
+				"         \n" + 
+				"}\n" + 
+				"      \n" + 
+				"},\n" + 
+				"      \"ordemprioridade\":null\n" + 
+				"   \n" + 
+				"}\n" + 
+				"}";
+		
+		LeiDeCota lei = objectMapper.readValue(json, LeiDeCota.class);
+		
 		String jsonString = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(lei);
 		System.out.println(jsonString);
 		

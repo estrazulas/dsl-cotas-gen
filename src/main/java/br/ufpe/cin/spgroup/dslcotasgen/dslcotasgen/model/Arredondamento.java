@@ -7,7 +7,7 @@ public enum Arredondamento {
 	@JsonProperty("ceil")
 	CEIL,
 	
-	@JsonProperty("ceil")
+	@JsonProperty("round")
 	ROUND
 	
 }
