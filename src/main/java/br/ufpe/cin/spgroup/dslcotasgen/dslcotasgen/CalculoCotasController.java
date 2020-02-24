@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -22,6 +24,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Arredondamento;
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.CategoriaCota;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.LeiDeCota;
 
 @RestController
@@ -32,19 +36,45 @@ public class CalculoCotasController {
 	@Autowired
 	ResourceLoader resourceLoader;
 
-	@GetMapping("/dsl-cotas/quadro-vagas/{versao}")
-	public Map<String, Integer> getQuadroVagas(@PathVariable String versao) {
+	@GetMapping("/dsl-cotas/quadro-vagas/{versao}/{quantidade}")
+	public Map<String, Integer> getQuadroVagas(@PathVariable String versao, @PathVariable Integer quantidade) {
 
 		HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
 
 		try {
 			LeiDeCota lei = this.getLeiCota(versao);
-			System.out.println(lei);
+			
+			Arredondamento formaArredondamento = lei.getDadosGerais().getArredondamento();
+			
+			CategoriaCota categoriaPai = lei.getDistribuicao().getCategoria();
+			
+			CategoriaCotaUtil.insereConfiguracoesReserva(categoriaPai,lei.getConfiguracoes());
+			
+			defineAlocacaoVagas(quantidade, categoriaPai, formaArredondamento);
+			
+			System.out.println("teste");
+			
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 
 		return hashMap;
+	}
+
+	private void defineAlocacaoVagas(Integer quantidade, CategoriaCota categoria, Arredondamento formaArredondamento) {
+		if(categoria.getCategoriaPai() == null){
+			categoria.setQuantidadeAlocada(quantidade);
+		}else {
+			categoria.setQuantidadeAlocada(formaArredondamento.defineAlocacaoPeloPercentual(categoria));
+		}
+		List<CategoriaCota> categorias = categoria.getCategorias();
+		
+		for (CategoriaCota categoriaCota : categorias) {
+			defineAlocacaoVagas(quantidade, categoriaCota, formaArredondamento);
+			
+		}
+		System.out.println(categoria);
+		
 	}
 
 	public LeiDeCota getLeiCota(String versao) throws JsonMappingException, JsonProcessingException {
