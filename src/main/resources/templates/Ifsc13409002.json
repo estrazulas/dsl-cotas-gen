@@ -21,12 +21,6 @@
           "categorias":[
 
             {
-            "sigla":"CLAG",
-
-            "reserva":"RESTANTE_VAGAS",
-            "descricao":"Ampla concorrência "
-            },
-            {
             "sigla":"EP",
 
             "reserva":"50",
@@ -136,6 +130,12 @@
                 }
               ]
             ,            "descricao":"Candidatos estudantes da escola ública"
+            },
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Ampla concorrência"
             }
           ]
         ,        "descricao":"Total de vagas disponíveis"

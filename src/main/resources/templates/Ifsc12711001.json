@@ -20,12 +20,6 @@
           "categorias":[
 
             {
-            "sigla":"CLAG",
-
-            "reserva":"RESTANTE_VAGAS",
-            "descricao":"Ampla Concorrencia"
-            },
-            {
             "sigla":"EP",
 
             "reserva":"PercentualEP",
@@ -75,9 +69,15 @@
                 }
               ]
             ,            "descricao":"Candidatos que estudaram em escola púlica"
+            },
+            {
+            "sigla":"CLAG",
+
+            "reserva":"RESTANTE_VAGAS",
+            "descricao":"Ampla concorrência"
             }
           ]
-        ,        "descricao":"Total de vagas"
+        ,        "descricao":"Total de vagasgit"
         }
     },
 
