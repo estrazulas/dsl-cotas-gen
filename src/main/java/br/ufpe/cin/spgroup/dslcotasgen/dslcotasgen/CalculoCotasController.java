@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,17 +48,28 @@ public class CalculoCotasController {
 	}
 
 	
-	@PostMapping("/dsl-cotas/aprova-candidatos/{versao}/")
-	public List<Candidato> aprovaCandidatos(@PathVariable String versao, @RequestBody List<Candidato> candidatos){
+	@Transactional
+	@PostMapping("/dsl-cotas/aprova-candidatos/{versao}/{quantidade}")
+	public List<Candidato> aprovaCandidatos(@PathVariable String versao, @PathVariable Integer quantidade, @RequestBody List<Candidato> candidatos){
 		try {
 			LeiDeCota lei = leiUtil.getLeiCota(versao);		
-			
 			candidatosRepo.saveAll(candidatos);
+						
+			Map<String, Integer> calculaQuadroVagas = calculaQuadroVagas(versao, quantidade);
 			
+			List<String> quadroVagasLista = new ArrayList<String>(calculaQuadroVagas.keySet());
 			
-			List<Candidato> candidatosFiltro= candidatosDao.findCandidatosByCategoriaInscricao("EP_RI_PPI",2);
+			long codigoCurso = candidatos.get(0).getCodigoCurso();
+			
+			for (String categoria : quadroVagasLista) 
+			{
+				Integer quantidadeAprovar = calculaQuadroVagas.get(categoria);
+				int quantidadeAprovados = candidatosDao.aprovaCandidatosByCategoriaInscricao(categoria,codigoCurso, quantidadeAprovar);
+				logger.info("Aprovados "+quantidadeAprovados+" na categoria "+categoria+" do curso  "+codigoCurso);
+			}
+			
 		
-			return candidatosFiltro;
+			return candidatosRepo.findCandidatoByCodigoCurso(codigoCurso);
 			
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -125,15 +137,15 @@ public class CalculoCotasController {
 	}
 	
 	private ArrayList<Candidato> baseCandidatosTeste() {
-		Candidato teste = new Candidato(1,1000123451,"CLA","CLAG");
-		Candidato teste2 = new Candidato(2,1000123452,"CLA","EP_RI_PPI");		
-		Candidato teste3 = new Candidato(3,1000123453,"CLA","CLAG");
-		Candidato teste4 = new Candidato(4,1000123454,"CLA","EP_RI_PPI");
-		Candidato teste5 = new Candidato(5,1000123455,"CLA","CLAG");
-		Candidato teste6 = new Candidato(6,1000123456,"CLA","EP_RS_PPI");
-		Candidato teste7 = new Candidato(6,1000123456,"CLA","EP_RI_PPI");
-		Candidato teste8 = new Candidato(6,1000123456,"CLA","CLAG");
-		Candidato teste9 = new Candidato(6,1000123456,"CLA","EP_RI_PPI");
+		Candidato teste = new Candidato(1,1000123451,123456,"CLA","CLAG");
+		Candidato teste2 = new Candidato(2,1000123452,123456,"CLA","EP_RI_PPI");		
+		Candidato teste3 = new Candidato(3,1000123453,123456,"CLA","CLAG");
+		Candidato teste4 = new Candidato(4,1000123454,123456,"CLA","EP_RI_PPI");
+		Candidato teste5 = new Candidato(5,1000123455,123456,"CLA","CLAG");
+		Candidato teste6 = new Candidato(6,1000123456,123456,"CLA","EP_RS_PPI");
+		Candidato teste7 = new Candidato(7,1000123457,123456,"CLA","EP_RI_PPI");
+		Candidato teste8 = new Candidato(8,1000123458,123456,"CLA","CLAG");
+		Candidato teste9 = new Candidato(9,1000123459,123456,"CLA","EP_RI_PPI");
 			
 		ArrayList<Candidato> arrayList = new ArrayList<Candidato>();
 		arrayList.add(teste);
@@ -143,6 +155,8 @@ public class CalculoCotasController {
 		arrayList.add(teste5);
 		arrayList.add(teste6);
 		arrayList.add(teste7);
+		arrayList.add(teste8);
+		arrayList.add(teste9);
 		return arrayList;
 	}
 

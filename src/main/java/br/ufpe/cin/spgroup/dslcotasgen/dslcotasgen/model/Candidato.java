@@ -1,21 +1,25 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "candidatos")
+@Table(name = "candidatos", uniqueConstraints = @UniqueConstraint(columnNames = {"codigoCurso", "classificacao"}))
 public class Candidato {
 
 	private int classificacao;
 	
 	@Id
+	@Column(unique = true)
 	private long codigoInscricao;
 	
-	private String situacaoDeInscricao;
+	private long codigoCurso;
 	
+	private String situacaoDeInscricao;
+		
 	private String categoriaInscricao;
 	
 	private String situacaoDeClassificacao;
@@ -24,13 +28,22 @@ public class Candidato {
 		
 	}
 	
-	public Candidato(int classificacao, long codigoInscricao, String situacaoDeInscricao, String categoriaInscricao) {
+	public Candidato(int classificacao, long codigoInscricao, long codigoCurso, String situacaoDeInscricao, String categoriaInscricao) {
 		this.classificacao = classificacao;
 		this.codigoInscricao = codigoInscricao;
 		this.situacaoDeInscricao = situacaoDeInscricao;
 		this.categoriaInscricao = categoriaInscricao;
+		this.codigoCurso =  codigoCurso;
 	}
 
+	public long getCodigoCurso() {
+		return codigoCurso;
+	}
+	
+	public void setCodigoCurso(long codigoCurso) {
+		this.codigoCurso = codigoCurso;
+	}
+	
 	public int getClassificacao() {
 		return classificacao;
 	}

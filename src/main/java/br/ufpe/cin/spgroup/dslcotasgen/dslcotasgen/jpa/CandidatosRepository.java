@@ -14,4 +14,7 @@ public interface CandidatosRepository extends JpaRepository<Candidato, Long> {
 
 	@Query("SELECT c FROM Candidatos c WHERE c.categoriaInscricao = :categoriaInscricao ORDER BY classificacao")
 	List<Candidato> findCandidatoByCategoriaInscricao(String categoriaInscricao);
+	
+	@Query("SELECT c FROM Candidatos c WHERE c.codigoCurso = :codigoCurso ORDER BY classificacao")
+	List<Candidato> findCandidatoByCodigoCurso(long codigoCurso);
 }

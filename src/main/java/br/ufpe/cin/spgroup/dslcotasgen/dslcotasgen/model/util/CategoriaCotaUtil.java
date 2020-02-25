@@ -1,7 +1,6 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.util;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.CategoriaCota;
