@@ -1,9 +1,17 @@
-package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen;
+package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "candidatos")
 public class Candidato {
 
 	private int classificacao;
 	
+	@Id
 	private long codigoInscricao;
 	
 	private String situacaoDeInscricao;

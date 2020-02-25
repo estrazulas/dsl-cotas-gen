@@ -1,4 +1,4 @@
-package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen;
+package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.util;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.jpa.CandidatosDao;
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.jpa.CandidatosRepository;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Arredondamento;
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Candidato;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.CategoriaCota;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.LeiDeCota;
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.util.CategoriaCotaUtil;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.util.LeiLoader;
 
 @RestController
@@ -27,6 +31,12 @@ public class CalculoCotasController {
 
 	@Autowired
 	private LeiLoader leiUtil;
+	
+	@Autowired
+	private CandidatosRepository candidatosRepo;
+	
+	@Autowired
+	private CandidatosDao candidatosDao;
 	
 	Logger logger = LoggerFactory.getLogger(CalculoCotasController.class);
 
@@ -42,6 +52,12 @@ public class CalculoCotasController {
 		try {
 			LeiDeCota lei = leiUtil.getLeiCota(versao);		
 			
+			candidatosRepo.saveAll(candidatos);
+			
+			
+			List<Candidato> candidatosFiltro= candidatosDao.findCandidatosByCategoriaInscricao("EP_RI_PPI",2);
+		
+			return candidatosFiltro;
 			
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
@@ -109,13 +125,24 @@ public class CalculoCotasController {
 	}
 	
 	private ArrayList<Candidato> baseCandidatosTeste() {
-		Candidato teste = new Candidato(1,1000123456,"CLA","CLAG");
-		Candidato teste2 = new Candidato(2,1000123456,"CLA","CLAG");		
-		Candidato teste3 = new Candidato(3,1000123456,"CLA","CLAG");
+		Candidato teste = new Candidato(1,1000123451,"CLA","CLAG");
+		Candidato teste2 = new Candidato(2,1000123452,"CLA","EP_RI_PPI");		
+		Candidato teste3 = new Candidato(3,1000123453,"CLA","CLAG");
+		Candidato teste4 = new Candidato(4,1000123454,"CLA","EP_RI_PPI");
+		Candidato teste5 = new Candidato(5,1000123455,"CLA","CLAG");
+		Candidato teste6 = new Candidato(6,1000123456,"CLA","EP_RS_PPI");
+		Candidato teste7 = new Candidato(6,1000123456,"CLA","EP_RI_PPI");
+		Candidato teste8 = new Candidato(6,1000123456,"CLA","CLAG");
+		Candidato teste9 = new Candidato(6,1000123456,"CLA","EP_RI_PPI");
+			
 		ArrayList<Candidato> arrayList = new ArrayList<Candidato>();
 		arrayList.add(teste);
 		arrayList.add(teste2);
 		arrayList.add(teste3);
+		arrayList.add(teste4);
+		arrayList.add(teste5);
+		arrayList.add(teste6);
+		arrayList.add(teste7);
 		return arrayList;
 	}
 
