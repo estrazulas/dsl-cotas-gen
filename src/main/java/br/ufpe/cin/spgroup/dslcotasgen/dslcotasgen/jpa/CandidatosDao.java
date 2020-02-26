@@ -26,11 +26,32 @@ public class CandidatosDao {
 		return query.getResultList();
     }
     
+    @Transactional
     public int aprovaCandidatosByCategoriaInscricao(String categoriaInscricao,long codigoCurso, int limit) {
         Query query = entityManager.createQuery("UPDATE Candidato c SET c.situacaoDeInscricao ='APV', c.situacaoDeClassificacao=:categoriaInscricao WHERE c.situacaoDeInscricao = 'CLA' AND c.codigoCurso = :codigoCurso AND c.categoriaInscricao = :categoriaInscricao").setMaxResults(limit);
         query.setParameter("codigoCurso", codigoCurso);
         query.setParameter("categoriaInscricao", categoriaInscricao);
-		return query.executeUpdate();
+		int executeUpdate = query.executeUpdate();
+		entityManager.flush();
+		return executeUpdate;
     }
+    
+    @Transactional
+    public void saveAll(List<Candidato> candidatos) {
+    	for (Candidato candidato : candidatos) {
+    		entityManager.persist(candidato);  
+		}
+    	entityManager.flush();
+    }
+
+	public List<Candidato> findCandidatoByCodigoCurso(long codigoCurso) {
+		entityManager.clear();
+        TypedQuery<Candidato> query = entityManager.createQuery("SELECT c FROM Candidato c WHERE c.codigoCurso =  :codigoCurso  ORDER BY c.classificacao",
+        		Candidato.class);
+        query.setParameter("codigoCurso", codigoCurso);
+        return query.getResultList();
+	}
+    
+    
 
 }
