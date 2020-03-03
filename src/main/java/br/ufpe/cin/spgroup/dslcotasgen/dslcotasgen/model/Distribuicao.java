@@ -1,5 +1,7 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model;
 
+import java.util.List;
+
 public class Distribuicao {
 
 	private CategoriaCota categoria;
@@ -18,6 +20,14 @@ public class Distribuicao {
 
 	public void setCategoria(CategoriaCota categoria) {
 		this.categoria = categoria;
+	}
+	public String getCategoriaAmpla() {
+		if(!categoria.getCategorias().isEmpty()) {
+			List<CategoriaCota> categorias = categoria.getCategorias();
+			CategoriaCota categoriaCota = categorias.get((categorias.size()-1));
+			return categoriaCota.getSigla();
+		}
+		return "";
 	}
 	
 	

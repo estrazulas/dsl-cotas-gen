@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.jpa.CandidatosDao;
 import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Arredondamento;
@@ -37,25 +38,36 @@ public class CalculoCotasController {
 
 	@GetMapping("/dsl-cotas/quadro-vagas/{versao}/{quantidade}")
 	public Map<String, Integer> getQuadroVagas(@PathVariable String versao, @PathVariable Integer quantidade) {
-		return calculaQuadroVagas(versao, quantidade);
+		return calculaQuadroVagas(null,versao, quantidade);
 	}
 
 	@PostMapping("/dsl-cotas/aprova-candidatos/{versao}/{quantidade}")
 	public List<Candidato> aprovaCandidatos(@PathVariable String versao, @PathVariable Integer quantidade,
-			@RequestBody List<Candidato> candidatos) {
+			@RequestBody List<Candidato> candidatos) throws JsonMappingException, JsonProcessingException {
+		
+		long codigoCurso = candidatos.get(0).getCodigoCurso();
+		candidatosDao.limpaCandidatos(codigoCurso);
 		
 		candidatosDao.saveAll(candidatos);
 
-		Map<String, Integer> calculaQuadroVagas = calculaQuadroVagas(versao, quantidade);
+		LeiDeCota leiCota = leiUtil.getLeiCota(versao);
+		
+		Map<String, Integer> calculaQuadroVagas = calculaQuadroVagas(leiCota,versao, quantidade);
 
 		List<String> quadroVagasLista = new ArrayList<String>(calculaQuadroVagas.keySet());
 
-		long codigoCurso = candidatos.get(0).getCodigoCurso();
+
+		
+		
 
 		for (String categoria : quadroVagasLista) {
 			Integer quantidadeAprovar = calculaQuadroVagas.get(categoria);
-			int quantidadeAprovados = candidatosDao.aprovaCandidatosByCategoriaInscricao(categoria, codigoCurso,
+			
+			int quantidadeAprovados = candidatosDao.aprovaCandidatosByCategoriaInscricao(leiCota.getCategoriaAmplaConcorrencia(),categoria, codigoCurso,
 					quantidadeAprovar);
+			
+			//TODO: aprovar por transbordo as vagas restantes
+			
 			logger.info(
 					"Aprovados " + quantidadeAprovados + " na categoria " + categoria + " do curso  " + codigoCurso);
 		}
@@ -80,11 +92,12 @@ public class CalculoCotasController {
 		return null;
 	}
 
-	private Map<String, Integer> calculaQuadroVagas(String versao, Integer quantidade) {
+	private Map<String, Integer> calculaQuadroVagas(LeiDeCota lei ,String versao, Integer quantidade) {
 		HashMap<String, Integer> hashMap = new HashMap<String, Integer>();
 
 		try {
-			LeiDeCota lei = leiUtil.getLeiCota(versao);
+			if(lei==null)
+				lei = leiUtil.getLeiCota(versao);
 
 			Arredondamento formaArredondamento = lei.getDadosGerais().getArredondamento();
 

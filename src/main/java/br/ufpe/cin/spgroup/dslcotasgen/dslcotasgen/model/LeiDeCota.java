@@ -41,6 +41,9 @@ public class LeiDeCota {
 		this.dadosGerais = dadosGerais;
 	}
 
+	public String getCategoriaAmplaConcorrencia() {
+		return this.distribuicao.getCategoriaAmpla();
+	}
 	public Configuracoes getConfiguracoes() {
 		return configuracoes;
 	}
