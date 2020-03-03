@@ -2,6 +2,7 @@ package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -56,8 +57,6 @@ public class CalculoCotasController {
 
 		List<String> quadroVagasLista = new ArrayList<String>(calculaQuadroVagas.keySet());
 
-
-		
 		
 
 		for (String categoria : quadroVagasLista) {
@@ -66,10 +65,29 @@ public class CalculoCotasController {
 			int quantidadeAprovados = candidatosDao.aprovaCandidatosByCategoriaInscricao(leiCota.getCategoriaAmplaConcorrencia(),categoria, codigoCurso,
 					quantidadeAprovar);
 			
-			//TODO: aprovar por transbordo as vagas restantes
-			
 			logger.info(
 					"Aprovados " + quantidadeAprovados + " na categoria " + categoria + " do curso  " + codigoCurso);
+			
+			int restanteVagasNaCategoria = quantidadeAprovar - quantidadeAprovados;
+			
+			if(restanteVagasNaCategoria> 0) {
+				List<String> listaOrdemPrioridade = leiCota.getListaOrdemPrioridade();
+				
+				for (String siglaOrdemPrioridade : listaOrdemPrioridade) {
+					if(restanteVagasNaCategoria>0) {
+						int quantidadeAprovadosTransbordo = candidatosDao.aprovaCandidatosByCategoriaInscricao(leiCota.getCategoriaAmplaConcorrencia(),siglaOrdemPrioridade, codigoCurso,
+								restanteVagasNaCategoria);
+						
+						restanteVagasNaCategoria -= quantidadeAprovadosTransbordo;
+						
+						logger.info(
+								"Aprovados por transbordo " + quantidadeAprovadosTransbordo + " na categoria " + categoria + " do curso  " + codigoCurso);
+					}
+				}
+				
+			}
+			
+		
 		}
 
 		return candidatosDao.findCandidatoByCodigoCurso(codigoCurso);

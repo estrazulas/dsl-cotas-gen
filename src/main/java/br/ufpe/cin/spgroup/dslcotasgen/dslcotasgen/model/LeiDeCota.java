@@ -1,5 +1,8 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
@@ -62,6 +65,11 @@ public class LeiDeCota {
 
 	public OrdemPrioridade getOrdemprioridade() {
 		return ordemprioridade;
+	}
+	
+	public List<String> getListaOrdemPrioridade(){
+		List<String> quadroVagasLista = new ArrayList<String>(ordemprioridade.getCategorias().keySet());
+		return quadroVagasLista;
 	}
 
 	public void setOrdemprioridade(OrdemPrioridade ordemprioridade) {
