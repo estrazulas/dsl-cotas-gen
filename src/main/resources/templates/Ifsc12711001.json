@@ -1,7 +1,7 @@
 {
   "lei":{
     "geral":{
-      "codigo":"IFSC_12711_001",
+      "codigo":"001",
       "descricao":"001 Lei 12.711 primeira versão",
       "arredondamento":"round"
     },
@@ -32,13 +32,13 @@
                   "categorias":[
 
                     {
-                    "sigla":"EP_RI_PPI",
+                    "sigla":"AAEPRIPPI",
 
                     "reserva":"PercentualPPI",
                     "descricao":"Candidatos de renda inferior que são auto declarados preto pardo indígenas"
                     },
                     {
-                    "sigla":"EP_RI_NPPI",
+                    "sigla":"AAEPRINPPI",
 
                     "reserva":"RESTANTE_VAGAS",
                     "descricao":"Candidatos de renda inferior que NÃO são auto declarados preto pardo indígenas"
@@ -53,16 +53,16 @@
                   "categorias":[
 
                     {
-                    "sigla":"EP_RS_PPI",
+                    "sigla":"AAEPRSPPI",
 
                     "reserva":"PercentualPPI",
                     "descricao":"Candidatos de renda superior que são auto declarados preto pardo indígenas"
                     },
                     {
-                    "sigla":"EP_RS_NPPI",
+                    "sigla":"AAEPRSNPPI",
 
                     "reserva":"RESTANTE_VAGAS",
-                    "descricao":"Candidatos de renda superior a 1.5 salarios minimos, que NÃO são auto declarados preto pardo indígenas"
+                    "descricao":""
                     }
                   ]
                 ,                "descricao":"Escola pública com renda superior ou igual à 1.5 salários mínimos"
@@ -74,7 +74,7 @@
             "sigla":"CLAG",
 
             "reserva":"RESTANTE_VAGAS",
-            "descricao":"Ampla concorrência"
+            "descricao":""
             }
           ]
         ,        "descricao":"Total de vagasgit"
@@ -82,10 +82,10 @@
     },
 
     "ordemprioridade":{
-      "0":"EP_RI_PPI",
-      "1":"EP_RI_NPPI",
-      "2":"EP_RS_PPI",
-      "3":"EP_RS_NPPI",
+      "0":"AAEPRIPPI",
+      "1":"AAEPRINPPI",
+      "2":"AAEPRSPPI",
+      "3":"AAEPRSNPPI",
       "4":"CLAG"
     }
 
