@@ -79,8 +79,29 @@ class IngressoDslCotasTest {
 		assertEquals(listaCursosTeste.isEmpty(), false);
 	}
 
-	private void comparaResultado(Map<String, Integer> retornaQuadroVagasApi, Curso curso) {
+	private void comparaResultado(Map<String, Integer> quadroVagasApi, Curso curso) {
 		
+		Map<String, Integer> quadroVagasIngresso = curso.getQuadroVagas();
+		
+		if(quadroVagasIngresso.isEmpty()) {
+			System.out.println("CURSO:"+curso.getNomeCurso()+"["+curso.getIdCurso()+"] Não foi possível encontrar o quadro de vagas na base do ingresso.");
+		}
+		else {
+			System.out.println("Comparando "+curso.getNomeCurso()+"["+curso.getIdCurso()+"] de "+curso.getProcessoSeletivo()+" vagas["+curso.getQuantidadeVagas()+"]");
+			for (String categoriaCota: quadroVagasIngresso.keySet()) {
+				Integer qtdApi = quadroVagasApi.get(categoriaCota);
+				Integer qtdIngresso = quadroVagasIngresso.get(categoriaCota);
+				if(qtdIngresso== null) {
+					System.out.println(categoriaCota+" => categoria não encontrada ");
+				}else {
+					if(qtdApi.equals(qtdIngresso)) {
+						System.out.println(categoriaCota+" => "+qtdApi+" (ok)");
+					}else {
+						System.out.println(categoriaCota+" => "+qtdApi+" (nok)"+" deveria ser "+qtdIngresso);
+					}
+				}
+			}
+		}
 		//comparar se a quantidade bate para cada cota, mostrar dados ps e curso
 		
 	}
@@ -110,10 +131,10 @@ class IngressoDslCotasTest {
 			List<QuadroVaga> list = cursoQuadro.get(idCurso);
 			if (list == null) {
 				list = new ArrayList<>();
-				list.add(new QuadroVaga((String) linha.get("siglaCota"), (Long) linha.get("quantidadeApv")));
+				list.add(new QuadroVaga((String) linha.get("siglaCota"), (int) (long) linha.get("quantidadeApv")));
 				cursoQuadro.put(idCurso, list);
 			} else {
-				list.add(new QuadroVaga((String) linha.get("siglaCota"), (Long) linha.get("quantidadeApv")));
+				list.add(new QuadroVaga((String) linha.get("siglaCota"), (int) (long) linha.get("quantidadeApv")));
 			}
 		}
 		return cursoQuadro;

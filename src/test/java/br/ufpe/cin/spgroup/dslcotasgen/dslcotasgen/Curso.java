@@ -1,6 +1,8 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Curso {
 
@@ -50,8 +52,16 @@ public class Curso {
 		this.quadroVagas = list;
 		
 	}
-	public List<QuadroVaga> getQuadroVagas() {
-		return quadroVagas;
+	public Map<String,Integer> getQuadroVagas() {
+		HashMap<String, Integer> mapQuadroVagas = new HashMap<>();
+		if(quadroVagas == null)
+		{
+			return mapQuadroVagas;
+		}
+		for (QuadroVaga quadroVaga : quadroVagas) {
+			mapQuadroVagas.put(quadroVaga.getSigla(), quadroVaga.getQuantidade());
+		}
+		return mapQuadroVagas;
 	}
 	
 }
