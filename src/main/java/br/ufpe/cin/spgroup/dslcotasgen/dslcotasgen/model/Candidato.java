@@ -1,5 +1,7 @@
 package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model;
 
+import java.util.HashMap;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -23,6 +25,8 @@ public class Candidato {
 	private String categoriaInscricao;
 	
 	private String situacaoDeClassificacao;
+	
+	private String situacaoDeClassificacaoIngresso;
 
 	public Candidato() {
 		
@@ -91,6 +95,32 @@ public class Candidato {
 				+ categoriaInscricao + ", situacaoDeClassificacao=" + situacaoDeClassificacao + "";
 	}
 	
-	
+	public void setSituacaoDeClassificacaoIngresso(String situacaoDeClassificacaoIngresso) {
+		this.situacaoDeClassificacaoIngresso = situacaoDeClassificacaoIngresso;
+	}
+	public String getSituacaoDeClassificacaoIngresso(HashMap<Long, String> categoriaRealIngresso) {
+		this.situacaoDeClassificacaoIngresso = categoriaRealIngresso.get(this.getCodigoInscricao());
+		return situacaoDeClassificacaoIngresso;
+	}
+
+	public String confereCota() {
+		
+		
+		if(this.situacaoDeClassificacao!= null && this.situacaoDeClassificacaoIngresso != null && !this.situacaoDeClassificacao.isEmpty() 
+				&& ! this.getSituacaoDeClassificacaoIngresso().isEmpty()){
+			if(this.situacaoDeClassificacao.equals(this.situacaoDeClassificacaoIngresso)) {
+				return "OK";
+			}else {
+				return "Divergência:"+situacaoDeClassificacao+" esperado "+situacaoDeClassificacaoIngresso;
+			}
+		}else {
+			return "Divergência:"+situacaoDeClassificacao+" esperado "+situacaoDeClassificacaoIngresso;
+		}
+			
+	}
+
+	private String getSituacaoDeClassificacaoIngresso() {
+		return this.situacaoDeClassificacaoIngresso;
+	}
 	
 }
