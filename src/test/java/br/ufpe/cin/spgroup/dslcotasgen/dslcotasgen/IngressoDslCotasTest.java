@@ -82,7 +82,7 @@ class IngressoDslCotasTest {
 			if (!curso.isRegraNova()) {
 				versao = "Ifsc12711001";
 			} else {
-				versao = "Ifsc13409002";
+				versao = "Ifsc13409003";
 			}
 
 			candidatosAClassificar = retornaListaCandidatosPrimeiraChamada(curso.getIdCurso(), curso.isRegraNova(),categoriaRealIngresso);
@@ -145,12 +145,18 @@ class IngressoDslCotasTest {
 	}
 
 	private String caseRegraNova() {
-		return "	CASE\n" + "			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"S\"  THEN \"AAEPRIPPI\"\n"
-				+ "			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"N\"  THEN \"AAEPRINPPI\"\n"
-				+ "           WHEN cotaRendaInferior = \"N\" AND cotaPPI=\"S\"  THEN \"AAEPRSPPI\"\n"
-				+ "			WHEN cotaEscolaPublica = \"S\" AND cotaRendaInferior = \"N\" AND cotaPPI=\"N\"  THEN \"AAEPRSNPPI\"\n"
-				+ "           WHEN cotaEscolaPublica = \"N\" THEN \"CLAG\"\n" + "			ELSE \"??\"\n"
-				+ "		END as categoriaInscricao\n";
+		return "	CASE\n" + 
+				"			WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"S\" AND can.cotaPPI=\"S\" AND can.cotaPCD=\"S\" THEN \"RIPPIPCDR1\"\n" + 
+				"			WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"S\" AND can.cotaPPI=\"N\" AND can.cotaPCD=\"S\" THEN \"RINPPIPCDR2\"\n" + 
+				"			WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"N\" AND can.cotaPPI=\"S\" AND can.cotaPCD=\"S\" THEN \"RSPPIPCDR3\"\n" + 
+				"            WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"N\" AND can.cotaPPI=\"N\" AND can.cotaPCD=\"S\" THEN \"RSNPPIPCDR4\"\n" + 
+				"            WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"S\" AND can.cotaPPI=\"S\" AND can.cotaPCD=\"N\" THEN \"RIPPIR5\"\n" + 
+				"            WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"S\" AND can.cotaPPI=\"N\" AND can.cotaPCD=\"N\" THEN \"RINPPIR6\"\n" + 
+				"			WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"N\" AND can.cotaPPI=\"S\" AND can.cotaPCD=\"N\" THEN \"RSPPIR7\"\n" + 
+				"            WHEN can.cotaEscolaPublica=\"S\" AND can.cotaRendaInferior=\"N\" AND can.cotaPPI=\"N\" AND can.cotaPCD=\"N\" THEN \"RSNPPIR8\"            \n" + 
+				"            WHEN cotaEscolaPublica = \"N\" THEN \"CLAG\"\n" + 
+				"			ELSE \"??\"\n" + 
+				"		END as categoriaInscricao ";
 	}
 
 	public List<Curso> getListaCursosTeste() {
