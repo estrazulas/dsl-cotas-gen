@@ -86,29 +86,21 @@ class IngressoDslCotasTest {
 			}
 
 			candidatosAClassificar = retornaListaCandidatosPrimeiraChamada(curso.getIdCurso(), curso.isRegraNova(),categoriaRealIngresso);
-
-			List<Candidato> aprovaCandidatosApi = aprovaCandidatosApi(candidatosAClassificar, versao, curso);
-			
-			extraiCsv(dataLines, curso, versao, aprovaCandidatosApi,categoriaRealIngresso);
+			if(!candidatosAClassificar.isEmpty()) {
+				List<Candidato> aprovaCandidatosApi = aprovaCandidatosApi(candidatosAClassificar, versao, curso);
+				alimentaCsv(dataLines, curso, versao, aprovaCandidatosApi,categoriaRealIngresso);
+			}
 
 		}
-
+		
+		gerarCsv(dataLines);
+		
 		assertEquals(listaCursosTeste.isEmpty(), false);
 	}
 
-	private void extraiCsv(List<String[]> dataLines, Curso curso, String versao, List<Candidato> aprovaCandidatosApi, HashMap<Long, String> categoriaRealIngresso) {
+	private void gerarCsv(List<String[]> dataLines) {
 		dataLines.add(new String[] { "Versão de lei", "Edital", "IdCurso", "Curso", "Vagas", "Inscrição",
 				"Classificação", "Categoria cota", "Categoria Real", "Conferência" });
-
-		for (Candidato candidato : aprovaCandidatosApi) {
-			dataLines.add(new String[] {
-
-					versao, curso.getProcessoSeletivo(), String.valueOf(curso.getIdCurso()), curso.getNomeCurso(),
-					String.valueOf(curso.getQuadroVagas()), String.valueOf(candidato.getCodigoInscricao()),
-					String.valueOf(candidato.getClassificacao()), candidato.getSituacaoDeClassificacao(),
-					candidato.getSituacaoDeClassificacaoIngresso(categoriaRealIngresso), candidato.confereCota(), });
-		}
-		
 		File csvOutputFile;
 		try {
 			csvOutputFile = File.createTempFile("/tmp/report", ".csv");
@@ -124,13 +116,26 @@ class IngressoDslCotasTest {
 		}
 	}
 
+	private void alimentaCsv(List<String[]> dataLines, Curso curso, String versao, List<Candidato> aprovaCandidatosApi, HashMap<Long, String> categoriaRealIngresso) {
+		for (Candidato candidato : aprovaCandidatosApi) {
+			dataLines.add(new String[] {
+
+					versao, curso.getProcessoSeletivo(), String.valueOf(curso.getIdCurso()), curso.getNomeCurso(),
+					String.valueOf(curso.getQuantidadeVagas()), String.valueOf(candidato.getCodigoInscricao()),
+					String.valueOf(candidato.getClassificacao()), candidato.getSituacaoDeClassificacao(),
+					candidato.getSituacaoDeClassificacaoIngresso(categoriaRealIngresso), candidato.confereCota(), });
+		}
+		
+		
+	}
+
 	private List<Candidato> retornaListaCandidatosPrimeiraChamada(Long idCurso, boolean regraNova,HashMap<Long, String> categoriasReais) {
 		String montaSiglasInscricao = (regraNova) ? caseRegraNova() : caseRegraAntiga();
 		String consultaCandidatos = "" + "SELECT \n" + "    'CLA' AS situacaoDeInscricao,\n"
 				+ "    null as situacaoDeClassificacao,\n" + "    situacaoDeClassificacao as situacaoDeClassificacaoIngresso,\n"
 				+ "    idCandidato AS codigoInscricao,\n" + "    curso as codigoCurso,\n" + "    classificacao,\n"
 				+ montaSiglasInscricao + "	 \n" + "FROM\n" + "    candidatos can\n" + "WHERE\n" + "    curso = "
-				+ idCurso + "  and classificacao > 0\n" + "ORDER BY can.classificacao";
+				+ idCurso + " and situacao='APV' and chamada =1 and classificacao > 0\n" + "ORDER BY can.classificacao";
 
 		return this.jdbcTemplate.query(consultaCandidatos, new CandidatosMapper(categoriasReais));
 	}
@@ -162,7 +167,9 @@ class IngressoDslCotasTest {
 	public List<Curso> getListaCursosTeste() {
 		String sqlCursos = "SELECT ps.nome as psNome, ps.regraNovaCotas as regraCotas, cur.idcurso, cur.nome as curNome, cur.vagas, ps.regraNovaCotas From \n"
 				+ "ps_processo_seletivo ps\n" + "inner join cursos cur on( cur.idprocesso = ps.idprocesso )\n"
-				+ "where cur.idcurso = 6570 and cota_escola_publica >0  and\n"
+				//+ "where cur.idcurso = 6570 and cota_escola_publica >0  and\n"
+				//+"where cur.idcurso = 10863 and cota_escola_publica >0  and\n"
+				+"where cota_escola_publica >0  and\n"
 				+ "ps.idprocesso  in (388,389,390,424,458,463,586,605,606,661,730,739,745,9771,9772,9827) \n"
 				+ "order by ps.idprocesso, cur.idcurso\n";
 		return this.jdbcTemplate.query(sqlCursos, new CursosMapper());
