@@ -83,6 +83,14 @@ public class Candidato {
 	public void setSituacaoDeClassificacao(String situacaoDeClassificacao) {
 		this.situacaoDeClassificacao = situacaoDeClassificacao;
 	}
+
+	@Override
+	public String toString() {
+		return "Candidato[" + codigoInscricao + "] classificacao=" + classificacao +  ", codigoCurso="
+				+ codigoCurso + ", situacaoDeInscricao=" + situacaoDeInscricao + ", categoriaInscricao="
+				+ categoriaInscricao + ", situacaoDeClassificacao=" + situacaoDeClassificacao + "";
+	}
+	
 	
 	
 }

@@ -61,7 +61,7 @@ public class CandidatosDao {
 
 			Query updateSql = entityManager.createQuery(updateStr);
 
-			if (!!aprovarAmpla) {
+			if (!aprovarAmpla) {
 				updateSql.setParameter("situacaoDeClassificacao", categoriaInscricao);
 			} else {
 				updateSql.setParameter("situacaoDeClassificacao", categoriaAmpla);

@@ -2,12 +2,9 @@ package br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -22,11 +19,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import reactor.core.publisher.Mono;
+import br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen.model.Candidato;
+import reactor.core.publisher.Flux;
 
 @ActiveProfiles("logging-test")
 class IngressoDslCotasTest {
@@ -61,93 +58,92 @@ class IngressoDslCotasTest {
 	@Test
 	void testaQuadroVagas() throws JsonMappingException, JsonProcessingException {
 		List<Curso> listaCursosTeste = getListaCursosTeste();		
-		HashMap<Long, List<QuadroVaga>>  quadroVagasIngresso = getQuadroVagasIngresso();
 
-		for (Iterator<Curso> iterator = listaCursosTeste.iterator(); iterator.hasNext();) {
+		for (Iterator<Curso> iterator = listaCursosTeste.iterator(); iterator.hasNext();) 
+		{
+			
 			Curso curso = (Curso) iterator.next();
-			curso.setQuadroVagas(quadroVagasIngresso.get(curso.getIdCurso()));
-
-			Map<String, Integer> retornaQuadroVagasApi = null;
+			
+			List<Candidato> candidatosAClassificar =null;
+			
+			String versao="";
+			
 			if (!curso.isRegraNova()) {
-				retornaQuadroVagasApi	= retornaQuadroVagasApi(curso.getQuantidadeVagas(),"Ifsc12711001");
+				versao = "Ifsc12711001";
 			} else {
-				retornaQuadroVagasApi 	= retornaQuadroVagasApi(curso.getQuantidadeVagas(),"Ifsc13409002");
+				versao = "Ifsc13409002";
 			}
-			comparaResultado(retornaQuadroVagasApi,curso);
+			
+			candidatosAClassificar = retornaListaCandidatosPrimeiraChamada(curso.getIdCurso(),curso.isRegraNova());
+			
+			List<Candidato> aprovaCandidatosApi = aprovaCandidatosApi(candidatosAClassificar,versao,curso);
+			
+			System.out.println("Comparando "+curso.getNomeCurso()+"["+curso.getIdCurso()+"] de "+curso.getProcessoSeletivo()+" vagas["+curso.getQuantidadeVagas()+"]");
+			for (Candidato candidato : aprovaCandidatosApi) {
+				System.out.println(candidato.toString());
+			}
+			//comparar resultado por classificação e situação de classificação
 		}
 
 		assertEquals(listaCursosTeste.isEmpty(), false);
 	}
 
-	private void comparaResultado(Map<String, Integer> quadroVagasApi, Curso curso) {
+	private List<Candidato> retornaListaCandidatosPrimeiraChamada(Long idCurso, boolean regraNova) {
+		String montaSiglasInscricao = (regraNova)?caseRegraNova():caseRegraAntiga();
+		String consultaCandidatos = ""
+				+ "SELECT \n" + 
+				"    'CLA' AS situacaoDeInscricao,\n" + 
+				"    null as situacaoDeClassificacao,\n" + 
+				"    idCandidato AS codigoInscricao,\n" + 
+				"    curso as codigoCurso,\n" + 
+				"    classificacao,\n" + 
+				montaSiglasInscricao+
+				"	 \n" + 
+				"FROM\n" + 
+				"    candidatos can\n" + 
+				"WHERE\n" + 
+				"    curso = "+idCurso+"  and classificacao > 0\n" + 
+				"ORDER BY can.classificacao";
 		
-		Map<String, Integer> quadroVagasIngresso = curso.getQuadroVagas();
-		
-		if(quadroVagasIngresso.isEmpty()) {
-			System.out.println("CURSO:"+curso.getNomeCurso()+"["+curso.getIdCurso()+"] Não foi possível encontrar o quadro de vagas na base do ingresso.");
-		}
-		else {
-			System.out.println("Comparando "+curso.getNomeCurso()+"["+curso.getIdCurso()+"] de "+curso.getProcessoSeletivo()+" vagas["+curso.getQuantidadeVagas()+"]");
-			for (String categoriaCota: quadroVagasIngresso.keySet()) {
-				Integer qtdApi = quadroVagasApi.get(categoriaCota);
-				Integer qtdIngresso = quadroVagasIngresso.get(categoriaCota);
-				if(qtdIngresso== null) {
-					System.out.println(categoriaCota+" => categoria não encontrada ");
-				}else {
-					if(qtdApi.equals(qtdIngresso)) {
-						System.out.println(categoriaCota+" => "+qtdApi+" (ok)");
-					}else {
-						System.out.println(categoriaCota+" => "+qtdApi+" (nok)"+" deveria ser "+qtdIngresso);
-					}
-				}
-			}
-		}
-		//comparar se a quantidade bate para cada cota, mostrar dados ps e curso
-		
+		return this.jdbcTemplate.query(consultaCandidatos, new CandidatosMapper());
+	}
+	
+	private String caseRegraAntiga() {
+		return "	CASE\n" + 
+		"			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"S\" THEN \"AAEPRIPPI\"\n" + 
+		"			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"N\"  THEN \"AAEPRINPPI\"\n" + 
+		"            WHEN cotaRendaInferior = \"N\" AND cotaPPI=\"S\"  THEN \"AAEPRSPPI\"\n" + 
+		"			WHEN cotaEscolaPublica = \"S\" AND cotaRendaInferior = \"N\" AND cotaPPI=\"N\"  THEN \"AAEPRSNPPI\"\n" + 
+		"            WHEN cotaEscolaPublica = \"N\" THEN \"CLAG\"\n" + 
+		"			ELSE \"??\"\n" + 
+		"		END as categoriaInscricao\n";
+	}
+	
+	private String caseRegraNova() {
+		return "	CASE\n" + 
+		"			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"S\"  THEN \"AAEPRIPPI\"\n" + 
+		"			WHEN cotaRendaInferior = \"S\" AND cotaPPI=\"N\"  THEN \"AAEPRINPPI\"\n" + 
+		"           WHEN cotaRendaInferior = \"N\" AND cotaPPI=\"S\"  THEN \"AAEPRSPPI\"\n" + 
+		"			WHEN cotaEscolaPublica = \"S\" AND cotaRendaInferior = \"N\" AND cotaPPI=\"N\"  THEN \"AAEPRSNPPI\"\n" + 
+		"           WHEN cotaEscolaPublica = \"N\" THEN \"CLAG\"\n" + 
+		"			ELSE \"??\"\n" + 
+		"		END as categoriaInscricao\n";
 	}
 
 	public List<Curso> getListaCursosTeste() {
 		String sqlCursos = "SELECT ps.nome as psNome, ps.regraNovaCotas as regraCotas, cur.idcurso, cur.nome as curNome, cur.vagas, ps.regraNovaCotas From \n"
 				+ "ps_processo_seletivo ps\n" + "inner join cursos cur on( cur.idprocesso = ps.idprocesso )\n"
-				+ "where cota_escola_publica >0  and\n"
+				+ "where cur.idcurso = 6570 and cota_escola_publica >0  and\n"
 				+ "ps.idprocesso  in (388,389,390,424,458,463,586,605,606,661,730,739,745,9771,9772,9827) \n"
 				+ "order by ps.idprocesso, cur.idcurso\n";
 		return this.jdbcTemplate.query(sqlCursos, new CursosMapper());
 	}
 
-	public HashMap<Long, List<QuadroVaga>> getQuadroVagasIngresso() {
-		List<Map<String, Object>> queryForList = jdbcTemplate.queryForList(
-				"SELECT cur.idCurso, can.situacaoDeClassificacao as siglaCota, count(can.idcandidato) as quantidadeApv From \n"
-						+ "ps_processo_seletivo ps\n" + "inner join cursos cur on( cur.idprocesso = ps.idprocesso )\n"
-						+ "inner join candidatos can on (can.idProcesso = ps.idProcesso and can.curso = cur.idCurso)\n"
-						+ "where cota_escola_publica >0  and\n"
-						+ "ps.idprocesso  in (388,389,390,424,458,463,586,605,606,661,730,739,745,9771,9772,9827) and situacao = 'APV' and chamada =1\n"
-						+ "group by cur.idCurso, can.situacaoDeClassificacao");
-
-		HashMap<Long, List<QuadroVaga>> cursoQuadro = new HashMap<>();
-
-		for (Map<String, Object> linha : queryForList) {
-			Long idCurso = (Long) linha.get("idCurso");
-			List<QuadroVaga> list = cursoQuadro.get(idCurso);
-			if (list == null) {
-				list = new ArrayList<>();
-				list.add(new QuadroVaga((String) linha.get("siglaCota"), (int) (long) linha.get("quantidadeApv")));
-				cursoQuadro.put(idCurso, list);
-			} else {
-				list.add(new QuadroVaga((String) linha.get("siglaCota"), (int) (long) linha.get("quantidadeApv")));
-			}
-		}
-		return cursoQuadro;
-
+	
+	private List<Candidato> aprovaCandidatosApi(List<Candidato> inscritos, String versao, Curso curso) throws JsonMappingException, JsonProcessingException {
+		Flux<Candidato> flux  = client3.post().uri("aprova-candidatos/"+versao+"/"+curso.getQuantidadeVagas()).body(Flux.fromIterable(inscritos),
+				Candidato.class).retrieve().bodyToFlux(Candidato.class);	
+		return flux.collectList().block();
 	}
 	
-	private Map<String, Integer> retornaQuadroVagasApi(Integer quantidade, String lei) throws JsonMappingException, JsonProcessingException {
-		
-		Mono<String> flux = client3.get().uri("quadro-vagas/"+lei+"/"+quantidade).retrieve().bodyToMono(String.class);
-		
-		 Map<String, Integer> carMap = mapper.readValue(flux.block(), new TypeReference<Map<String, Integer>>() {
-	      });
-
-		return carMap;
-	}
 }

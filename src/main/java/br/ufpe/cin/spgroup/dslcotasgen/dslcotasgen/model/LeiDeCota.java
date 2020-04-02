@@ -68,7 +68,7 @@ public class LeiDeCota {
 	}
 	
 	public List<String> getListaOrdemPrioridade(){
-		List<String> quadroVagasLista = new ArrayList<String>(ordemprioridade.getCategorias().keySet());
+		List<String> quadroVagasLista = new ArrayList<String>(ordemprioridade.getCategorias().values());
 		return quadroVagasLista;
 	}
 
