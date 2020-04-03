@@ -16,11 +16,17 @@ Ferramentas utilizadas:
 * @PostMapping("/dsl-cotas/aprova-candidatos/{versao}/{quantidade}")
 * @GetMapping("/dsl-cotas/ordem-prioridade/{versao}/")
 
-# Exemplo de uso 
-Run as na classe DslCotasGenApplication.java (br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen)
+# Exemplo de uso
 
-Criar request POST em um cliente como PostmanCanary:
+Passo 1) Após gerar o arquivo json na DSL, inserir na pasta templates dos resources do projeto, o nome do arquivo json será o nome a ser enviado no parâmetro /{versao} dos endpoints acima.
+
+Passo 2) Run as na classe DslCotasGenApplication.java (br.ufpe.cin.spgroup.dslcotasgen.dslcotasgen)
+
+Passo 3) Criar request POST em um cliente como PostmanCanary:
 
 ![](https://github.com/estrazulas/dsl-cotas-gen/blob/master/img/postmancanary.png)
+
+O retorno da API será a mesma lista de candidatos porém com a classificação por cotas conforme legislação passada.
+
 
 
