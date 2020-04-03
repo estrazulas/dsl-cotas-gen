@@ -21,5 +21,6 @@ Run as na classe DslCotasGenApplication.java (br.ufpe.cin.spgroup.dslcotasgen.ds
 
 Criar request POST em um cliente como PostmanCanary:
 
+![](https://github.com/estrazulas/dsl-cotas-gen/blob/master/img/postmancanary.png)
 
 
