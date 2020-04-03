@@ -71,6 +71,9 @@ class IngressoDslCotasTest {
 		HashMap<Long, String> categoriaRealIngresso =  new HashMap<Long, String>();
 
 		List<String[]> dataLines = new ArrayList<String[]>();
+		dataLines.add(new String[] { "Versão de lei", "Edital", "IdCurso", "Curso", "Vagas", "Inscrição",
+				"Classificação", "Categoria cota", "Categoria Real", "Conferência" });
+		
 		for (Iterator<Curso> iterator = listaCursosTeste.iterator(); iterator.hasNext();) {
 
 			Curso curso = (Curso) iterator.next();
@@ -99,8 +102,7 @@ class IngressoDslCotasTest {
 	}
 
 	private void gerarCsv(List<String[]> dataLines) {
-		dataLines.add(new String[] { "Versão de lei", "Edital", "IdCurso", "Curso", "Vagas", "Inscrição",
-				"Classificação", "Categoria cota", "Categoria Real", "Conferência" });
+		
 		File csvOutputFile;
 		try {
 			csvOutputFile = File.createTempFile("/tmp/report", ".csv");
